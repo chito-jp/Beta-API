@@ -19,20 +19,22 @@ app.get("/",(req,res)=>{
   res.send(fs.readFileSync(path.join("todo.html"),"utf-8"));
 });
 
-app.get("/api/auth/:name",async(req,res)=>{
-  const {name}=req.params;
-  const data=await api.getAuth(name);
-  res.json({name,data});
-});
-
 app.get("/api/id/:name",async(req,res)=>{
   const {name}=req.params;
-  const data=await api.getId(name);
-  fs.writeFileSync("data.json",JSON.stringify(api.getData()))
-  res.json({name,data});
+  res.json({name,data:await api.getId(name)});
 });
 
-const rankingPaths=[
+app.get("/api/auth/:name",async(req,res)=>{
+  const {name}=req.params;
+  res.json({name,data:await api.getAuth(name)});
+});
+
+app.get("/api/user/:target/:name",async(req,res)=>{
+  const {target,name}=req.params;
+  res.json(await api.getUser(target,name));
+});
+
+const paths=[
   "/api/ranking/40line/:name",
   "/api/ranking/20line/:name",
   "/api/ranking/marathon/:name",
@@ -43,22 +45,12 @@ const rankingPaths=[
   "/api/ranking/pps/:name",
   "/api/ranking/playtime/:name",
   "/api/ranking/follower/:name"
-]
+];
 
-for(let i=0;i<rankingPaths.length;i++){
-  app.get(rankingPaths[i],async(req,res)=>{
-    const {name}=req.params;
-    const raw=await api.getRanking(i,name);
-    res.json({data:api.sortRanking(raw,i),raw});
-  });
-}
-
-app.get("/api/user/:target/:name",async(req,res)=>{
-  const {target,name}=req.params;
-  const {raw,id}=await api.getUser(target,name,req.query?.session);
-  res.json({data:api.profile(raw,0,{name:target,id}),raw});
+for(let i=0;i<paths.length;i++)app.get(paths[i],async(req,res)=>{
+  const {name}=req.params;
+  res.json(await api.getRanking(i,name));
 });
-
 app.get("/api/data",(req,res)=>{
   res.json(JSON.parse(fs.readFileSync("data.json")));
 });
