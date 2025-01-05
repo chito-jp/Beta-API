@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "express": "^4.21.2",
-    "@chitose-jp/tetrisbeta-api": "^1.0.1"
+    "@chitose-jp/tetrisbeta-api": "^1.0.2"
   },
   "engines": {
     "node": "16.x"
