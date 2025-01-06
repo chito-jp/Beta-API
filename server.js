@@ -58,7 +58,7 @@ for(let i=0;i<paths.length;i++)app.get(paths[i],async(req,res)=>{
 });
 
 app.get("/api/alluser/:name",async(req,res)=>{
-  const {name}req.params;
+  const {name}=req.params;
   if(!name)return res.json({satatus:400,Error:"Name is required."});
   res.json(await api.getAllUser(name));
 });
@@ -66,7 +66,7 @@ app.get("/api/alluser/:name",async(req,res)=>{
 app.get("/api/search/:name",async(req,res)=>{
   const {q}=req.query;
   if(!q)return res.json({status:400,Error:"Keyward is required."});
-  const {name}req.params;
+  const {name}=req.params;
   if(!name)return res.json({satatus:400,Error:"Name is required."});
   res.json(await api.search(q,name));
 });
