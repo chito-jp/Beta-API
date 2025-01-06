@@ -21,16 +21,20 @@ app.get("/",(req,res)=>{
 
 app.get("/api/id/:name",async(req,res)=>{
   const {name}=req.params;
+  if(!name)return res.json({satatus:400,Error:"Name is required."});
   res.json({name,data:await api.getId(name)});
 });
 
 app.get("/api/auth/:name",async(req,res)=>{
   const {name}=req.params;
+  if(!name)return res.json({satatus:400,Error:"Name is required."});
   res.json({name,data:await api.getAuth(name)});
 });
 
 app.get("/api/user/:target/:name",async(req,res)=>{
   const {target,name}=req.params;
+  if(!target)return res.json({satatus:400,Error:"Target is required."});
+  if(!name)return res.json({satatus:400,Error:"Name is required."});
   res.json(await api.getUser(target,name));
 });
 
@@ -49,8 +53,24 @@ const paths=[
 
 for(let i=0;i<paths.length;i++)app.get(paths[i],async(req,res)=>{
   const {name}=req.params;
+  if(!name)return res.json({satatus:400,Error:"Name is required."});
   res.json(await api.getRanking(i,name));
 });
+
+app.get("/api/alluser/:name",async(req,res)=>{
+  const {name}req.params;
+  if(!name)return res.json({satatus:400,Error:"Name is required."});
+  res.json(await api.getAllUser(name));
+});
+
+app.get("/api/search/:name",async(req,res)=>{
+  const {q}=req.query;
+  if(!q)return res.json({status:400,Error:"Keyward is required."});
+  const {name}req.params;
+  if(!name)return res.json({satatus:400,Error:"Name is required."});
+  res.json(await api.search(q,name));
+});
+
 app.get("/api/data",(req,res)=>{
   res.json(JSON.parse(fs.readFileSync("data.json")));
 });
